@@ -1,0 +1,78 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3hwqa1k41k71"]
+
+[ext_resource type="Script" path="res://src/code/Gui.cs" id="1_cmuqi"]
+
+[node name="Gui" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cmuqi")
+
+[node name="options" type="VBoxContainer" parent="."]
+layout_mode = 1
+offset_right = 175.0
+offset_bottom = 40.0
+
+[node name="fps" type="HBoxContainer" parent="options"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="options/fps"]
+layout_mode = 2
+text = "physics_fps
+"
+
+[node name="SpinBox" type="SpinBox" parent="options/fps"]
+layout_mode = 2
+max_value = 9999.0
+
+[node name="vars" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2
+
+[node name="Ammo" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -203.0
+offset_top = -68.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="Ammo"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "0/0"
+
+[node name="UnfocusButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -36.0
+offset_right = 94.0
+grow_vertical = 0
+text = "unfocus"
+
+[node name="ReloadTime" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_bottom = 69.0
+grow_horizontal = 0
+
+[node name="Label" type="Label" parent="ReloadTime"]
+layout_mode = 2
+text = "0.00"
+
+[connection signal="value_changed" from="options/fps/SpinBox" to="." method="_on_spin_box_value_changed"]

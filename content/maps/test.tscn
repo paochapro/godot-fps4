@@ -1,0 +1,36 @@
+[gd_scene load_steps=8 format=3 uid="uid://bfpjtp02j23sb"]
+
+[ext_resource type="PackedScene" uid="uid://jlo03rk62h0e" path="res://src/tscn/map.tscn" id="1_jaew5"]
+[ext_resource type="PackedScene" uid="uid://bosv1f7y2drw5" path="res://src/tscn/player.tscn" id="2_0puec"]
+[ext_resource type="PackedScene" uid="uid://bdmkh7023qapv" path="res://content/models/testing_zone.glb" id="2_08u5n"]
+[ext_resource type="PackedScene" uid="uid://c0yhgkvas3x7a" path="res://src/tscn/item_crate.tscn" id="4_cmlbb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_y76vg"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_hth3x"]
+sky_material = SubResource("ProceduralSkyMaterial_y76vg")
+
+[sub_resource type="Environment" id="Environment_mgsqq"]
+background_mode = 2
+sky = SubResource("Sky_hth3x")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Map" instance=ExtResource("1_jaew5")]
+
+[node name="testing_zone" parent="Geometry" index="0" instance=ExtResource("2_08u5n")]
+
+[node name="Player" parent="Entities" index="0" instance=ExtResource("2_0puec")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.37619, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Entities" index="1"]
+transform = Transform3D(0.766044, 0.556671, -0.321394, 0, 0.5, 0.866026, 0.642788, -0.663414, 0.383022, 0, 6, 0)
+shadow_enabled = true
+
+[node name="ItemCrate" parent="Entities" index="2" instance=ExtResource("4_cmlbb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00644779, 2.63862, -5.57333)
+
+[node name="WorldEnvironment" parent="." index="2"]
+environment = SubResource("Environment_mgsqq")

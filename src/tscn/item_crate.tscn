@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0yhgkvas3x7a"]
+
+[ext_resource type="Script" path="res://src/code/ItemCrate.cs" id="1_cyfho"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_rhjo5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gov8a"]
+size = Vector3(1, 0.7, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hge3g"]
+size = Vector3(1, 0.7, 1)
+
+[node name="ItemCrate" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00226951, 0.00847769, 0.0135818)
+physics_material_override = SubResource("PhysicsMaterial_rhjo5")
+script = ExtResource("1_cyfho")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_gov8a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_hge3g")

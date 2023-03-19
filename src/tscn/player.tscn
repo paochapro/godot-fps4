@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bosv1f7y2drw5"]
+
+[ext_resource type="Script" path="res://src/code/player/Player.cs" id="1_ou7kl"]
+[ext_resource type="Script" path="res://src/code/player/PlayerMovement.cs" id="2_3cv64"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5mydi"]
+size = Vector3(1, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_754lp"]
+size = Vector3(1, 2, 1)
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_ou7kl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_5mydi")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.595221, 0)
+current = true
+
+[node name="WeaponModelRoot" type="Node3D" parent="Camera3D"]
+transform = Transform3D(-8.74228e-09, 0, 0.2, 0, 0.2, 0, -0.2, 0, -8.74228e-09, 0.628889, -0.500346, -1.28382)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_754lp")
+
+[node name="PlayerMovement" type="Node" parent="."]
+script = ExtResource("2_3cv64")
+MAX_SPEED = 17.0

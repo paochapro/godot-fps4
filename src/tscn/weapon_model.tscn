@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqtbddvg4fdsf"]
+
+[ext_resource type="Script" path="res://src/code/weapon/WeaponModelService.cs" id="1_1f0qy"]
+
+[node name="WeaponModel" type="Node3D"]
+script = ExtResource("1_1f0qy")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("")
+
+[node name="Muzzleflash" type="Sprite3D" parent="."]
