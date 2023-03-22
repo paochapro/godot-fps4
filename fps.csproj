@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,5 +12,6 @@
   <!--Custom implicit usings-->
   <ItemGroup>
     <Using Include="Godot"/>
+    <Using Include="System"/>
   </ItemGroup>
 </Project>

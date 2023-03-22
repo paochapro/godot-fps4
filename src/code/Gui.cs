@@ -1,7 +1,6 @@
 public partial class Gui : Control
 {
 	VBoxContainer varsContainer;
-	Player player;
 
 	public override void _Ready()
 	{

@@ -1,61 +1,44 @@
-partial class Weapon : Node3D
+class Weapon
 {
-    AmmoService ammo;
-    FireService fire;
-    WeaponModelService model;
-    Timer timer;
+    readonly WeaponData data;
+    int _magazine;
+    Map map;
 
-    public AmmoService Ammo => ammo;
-    public double ReloadTime => timer.TimeLeft;
-
-    public Weapon(WeaponData data)
-    {
-        this.ammo = data.AmmoService;
-        this.fire = data.FireService;
-        this.model = data.ModelService;
-
-        timer = new Timer();
-        timer.WaitTime = 1;
-        timer.OneShot = true;
-        timer.Timeout += OnReload;
-
-        AddChild(fire);
-        AddChild(timer);
-    }
-
-    public bool TryFire()
-    {
-        if(ammo.TryFire())
-        {
-            fire.FireOutput();
-            model.OnFire();
-            return true;
+    int magazine {
+        get => _magazine;
+        set {
+            _magazine = Mathf.Clamp(value, 0, data.magazineCapacity);
         }
-
-        return false;
     }
 
-    public bool TryReload()
+    public WeaponData WeaponData => data;
+    public int Magazine => magazine;
+    public int MagazineRefill => data.magazineCapacity - magazine;
+
+    public bool CanReload => magazine < data.magazineCapacity;
+    public bool CanFire => magazine > 0;
+
+    public Weapon(Map map, WeaponData weaponData, int startMagazine)
     {
-        if(ammo.CanReload)
-        {
-            model.OnStartReloading();
-            timer.Start();
-            return true;
-        }
-
-        return false;
+        this.map = map;
+        this.data = weaponData;
+        magazine = startMagazine;
     }
 
-    void OnReload()
+    public Weapon(Map map, WeaponData weaponData)
+        : this(map, weaponData, weaponData.magazineCapacity)
     {
-        ammo.TryReload();
-        model.OnEndReloading();
     }
-}
 
-struct WeaponData {
-    public AmmoService AmmoService; 
-    public FireService FireService;
-    public WeaponModelService ModelService;
+    public WeaponInstance CreateWeaponInstance(Map map, Node3D modelRoot)
+    {
+        WeaponInstance instance = new(this, data, modelRoot, map);
+        instance.OnFire += OnInstanceFire;
+        instance.OnReloadEnd += OnInstanceReloadEnd;
+        return instance;
+    }
+
+    void OnInstanceFire() => magazine--;
+    
+    void OnInstanceReloadEnd(int givenAmmo) => magazine += givenAmmo;
 }

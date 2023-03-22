@@ -1,0 +1,15 @@
+weapon
+{
+	"reloadService":
+	{
+		"magazine": 0,
+		"time":0,
+		"sound":"/PATH/",
+	},
+	"fireService":
+	{
+		"damage":0,
+		"sound":"/PATH/"
+	},
+	"model":"/PATH/",
+}

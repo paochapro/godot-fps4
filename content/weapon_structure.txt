@@ -1,0 +1,17 @@
+weapon_structure:
+{
+	model
+	sound_fire
+	sound_reload
+
+	reload_time
+	magazine_capacity
+	ammo_type
+
+	fire_type
+	fire_rate
+	damage
+	hold_to_fire
+
+	equip_time
+}

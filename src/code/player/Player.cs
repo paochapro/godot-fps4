@@ -1,18 +1,23 @@
+using System.Collections.Generic;
+
 partial class Player : CharacterBody3D
 {
-	PlayerMovement pm;
-	Weapon currentWeapon;
-
 	float sens = 0.0017f;
 	readonly float MAX_YAW = Mathf.DegToRad(90);
 	readonly float MIN_YAW = Mathf.DegToRad(-90);
 	Vector3 spawnPos;
 	[Export] float pushForce = 0.2f;
 
-	//Nodes
+	//Initialization of these properties happen in _Ready instead of constructor
+	//Thus we need to disable nullable to stop getting warnings
+	#nullable disable
+	PlayerMovement pm;
+	PlayerWeaponManager weaponManager;
+
 	Camera3D camera;
 	Map map;
 	Gui gui;
+	#nullable restore
 
 	public override void _Ready()
 	{
@@ -26,20 +31,22 @@ partial class Player : CharacterBody3D
 		map = GetNode<Map>("/root/Root/Map");
 		gui = GetNode<Gui>("/root/Root/Gui");
 
-		var weaponModel = GD.Load<PackedScene>("uid://siry2qbvuvw4").Instantiate<Node3D>();
-		var weaponModelRoot = GetNode<Node3D>("Camera3D/WeaponModelRoot");
-		var weaponModelService = new WeaponModelService(weaponModel);
-		weaponModelRoot.AddChild(weaponModelService);
-
-		WeaponData weaponData = new WeaponData() {
-			AmmoService = new AmmoService(999, 999, 999),
-			FireService = new PistolFire(map),
-			ModelService = weaponModelService
+		WeaponData startWeaponData = new() { 
+			ammoType = AmmoType.Pistol,
+			fireType = FireType.Pistol,
+			damage = 10,
+			magazineCapacity = 5,
+			modelUID = "uid://siry2qbvuvw4",
+			reloadTime = 3f,
+			//Useless for now
+			fireRate = 0.5f,
+			soundFire = "fire_snd",
+			soundReload = "reload_snd",
 		};
 
-		currentWeapon = new Weapon(weaponData);
-		currentWeapon.Name = "Weapon";
-		camera.AddChild(currentWeapon);
+		var modelRoot = camera.GetNode<Node3D>("WeaponModelRoot");
+		Weapon startWeapon = new(map, startWeaponData);
+		weaponManager = new(map, gui, camera, modelRoot, new[] { startWeapon });
 	}
 
 	public override void _Process(double dt)
@@ -51,22 +58,7 @@ partial class Player : CharacterBody3D
 				: Input.MouseModeEnum.Captured;
 		}
 
-		//Weapon
-		if(Input.IsActionJustPressed("fire"))
-		{
-			bool fired = currentWeapon.TryFire();
-			DebugVars.Set("Fired", fired);
-		}
-
-		if(Input.IsActionJustPressed("reload"))
-		{
-			DebugVars.Set("Reloaded", currentWeapon.TryReload());
-		}
-
-		Label ammo = gui.GetNode<Label>("Ammo/Label");
-		Label reloadTimer = gui.GetNode<Label>("ReloadTime/Label");
-		ammo.Text = $"{currentWeapon.Ammo.Magazine}/{currentWeapon.Ammo.Ammo}";
-		reloadTimer.Text = currentWeapon.ReloadTime.ToString("F2");
+		weaponManager.Process(dt);
 	}
 
 	public override void _PhysicsProcess(double delta)
