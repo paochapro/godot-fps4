@@ -1,15 +1,14 @@
-weapon
 {
-	"reloadService":
+	"pistol":
 	{
-		"magazine": 0,
-		"time":0,
-		"sound":"/PATH/",
-	},
-	"fireService":
-	{
-		"damage":0,
-		"sound":"/PATH/"
-	},
-	"model":"/PATH/",
+		"modelUID": "uid://siry2qbvuvw4",
+		"soundFire": "fire_snd",
+		"soundReload": "reload_snd",
+		"reloadTime": 1,
+		"magazineCapacity": 10,
+		"fireRate": 0.5,
+		"damage": 10,
+		"ammoType": "Pistol",
+		"fireType": "Pistol"
+	}
 }

@@ -9,7 +9,6 @@ class PlayerWeaponManager
     WeaponInstance? _equipedInstance;
     Node3D instanceRoot;
     Node3D modelRoot;
-    Map map;
     Gui gui;
 
     WeaponInstance? equipedInstance {
@@ -34,23 +33,22 @@ class PlayerWeaponManager
     public bool FireSuccess { get; private set; }
     public bool StartReloadSuccess { get; private set; }
 
-    public PlayerWeaponManager(Map map, Gui gui, Node3D instanceRoot, Node3D modelRoot, IEnumerable<Weapon> startWeapons)
+    public PlayerWeaponManager(PhysicsDirectSpaceState3D ss, Gui gui, Node3D instanceRoot, Node3D modelRoot, IEnumerable<Weapon> startWeapons)
     {
         this.instanceRoot = instanceRoot;
         this.modelRoot = modelRoot;
-        this.map = map;
         this.gui = gui;
         weapons = new(startWeapons);
 
-        equipedInstance = startWeapons.FirstOrDefault()?.CreateWeaponInstance(map, modelRoot);
+        equipedInstance = startWeapons.FirstOrDefault()?.CreateWeaponInstance(ss, modelRoot);
 
         var types = Enum.GetValues<AmmoType>();
         ammo = new(types.Select(t => new KeyValuePair<AmmoType,int>(t, 10)));
     }
 
     //Constructor without start weapons
-    public PlayerWeaponManager(Map map, Gui gui, Node3D instanceRoot, Node3D modelRoot)
-        : this(map, gui, instanceRoot, modelRoot, Enumerable.Empty<Weapon>())
+    public PlayerWeaponManager(PhysicsDirectSpaceState3D ss, Gui gui, Node3D instanceRoot, Node3D modelRoot)
+        : this(ss, gui, instanceRoot, modelRoot, Enumerable.Empty<Weapon>())
     {
     }
 

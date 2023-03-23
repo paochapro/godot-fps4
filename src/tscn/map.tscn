@@ -1,9 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://jlo03rk62h0e"]
-
-[ext_resource type="Script" path="res://src/code/Map.cs" id="1_47ldm"]
+[gd_scene format=3 uid="uid://jlo03rk62h0e"]
 
 [node name="Map" type="Node3D"]
-script = ExtResource("1_47ldm")
 
 [node name="Geometry" type="Node" parent="."]
 

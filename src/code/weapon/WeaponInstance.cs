@@ -14,7 +14,7 @@ partial class WeaponInstance : Node3D
 	public event Action? OnFire;
 	public event Action<int>? OnReloadEnd;
 
-	public WeaponInstance(Weapon weapon, WeaponData data, Node3D modelRoot, Map map)
+	public WeaponInstance(Weapon weapon, WeaponData data, Node3D modelRoot, PhysicsDirectSpaceState3D ss)
 	{
 		this.weapon = weapon;
 
@@ -24,13 +24,13 @@ partial class WeaponInstance : Node3D
 		
 		switch(data.fireType) {
 			case FireType.Pistol:
-				fireService = new PistolFire(dmg, map);
+				fireService = new PistolFire(dmg, ss);
 				break;
 			case FireType.Shotgun:
-				fireService = new PistolFire(dmg, map);
+				fireService = new PistolFire(dmg, ss);
 				break;
 			default:
-				fireService = new PistolFire(dmg, map);
+				fireService = new PistolFire(dmg, ss);
 				break;
 		}
 		
@@ -56,7 +56,7 @@ partial class WeaponInstance : Node3D
 		if(!weapon.CanFire) return false;
 
 		fire.FireOutput();
-		modelAnims.Play("fire");
+		modelAnims.PlayOrPass("fire");
 		OnFire?.Invoke();
 
 		return true;
@@ -71,7 +71,7 @@ partial class WeaponInstance : Node3D
 		);
 		if(cancel) return false;
 
-		modelAnims.Play("reloading");
+		modelAnims.PlayOrPass("reloading");
 		reloadTimer.Start();
 		magazineReloadAmount = givenAmmo;
 
@@ -80,7 +80,7 @@ partial class WeaponInstance : Node3D
 
 	void ReloadEnd()
 	{
-		modelAnims.Play("end_reloading");
+		modelAnims.PlayOrPass("end_reloading");
 		OnReloadEnd?.Invoke(magazineReloadAmount);
 		magazineReloadAmount = 0;
 	}

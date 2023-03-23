@@ -4,10 +4,10 @@ abstract partial class FireService : Node3D
 
 	protected const int rayDistance = 300;
 	protected float Damage => damage;
-	protected Map map;
+	protected PhysicsDirectSpaceState3D spaceState;
 
-	public FireService(float damage, Map map)  {
-		this.map = map;
+	public FireService(float damage, PhysicsDirectSpaceState3D spaceState)  {
+		this.spaceState = spaceState;
 		this.damage = damage;
 	}
 
@@ -16,22 +16,23 @@ abstract partial class FireService : Node3D
 
 partial class PistolFire : FireService
 {
-	PackedScene decalScene = GD.Load<PackedScene>("uid://dle5bqyhjn142");
+	PackedScene decalScene;
 
-	public PistolFire(float damage, Map map) : base(damage, map)
-	{}
+	public PistolFire(float damage, PhysicsDirectSpaceState3D spaceState) : base(damage, spaceState)
+	{
+		//TODO: needs to be redone
+		decalScene = GD.Load<PackedScene>("uid://dle5bqyhjn142");
+	}
 
 	public override void FireOutput()
 	{
-		var ss = map.GetWorld3D().DirectSpaceState;
-
 		PhysicsRayQueryParameters3D rayParams = new() { 
 			From = GlobalPosition,
 			To = GlobalPosition + (-GlobalTransform.Basis.Z * rayDistance),
 			CollisionMask = 1
 		};
 
-		Godot.Collections.Dictionary result = ss.IntersectRay(rayParams);
+		Godot.Collections.Dictionary result = spaceState.IntersectRay(rayParams);
 
 		if(result.Count != 0)
 		{

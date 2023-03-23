@@ -1,14 +1,14 @@
-struct WeaponData {
-    public string modelUID;
-    public string soundFire;
-    public string soundReload;
-    public float reloadTime;
-    public int magazineCapacity;
-    public float fireRate;
-    public float damage;
-    public AmmoType ammoType;
-    public FireType fireType;
-}
+readonly record struct WeaponData (
+    string modelUID,
+    string soundFire,
+    string soundReload,
+    float reloadTime,
+    int magazineCapacity,
+    float fireRate,
+    float damage,
+    AmmoType ammoType,
+    FireType fireType
+);
 
 enum AmmoType {
     Pistol,

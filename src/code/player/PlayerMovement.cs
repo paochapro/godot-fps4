@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-partial class PlayerMovement : Node
+class PlayerMovement
 {
-	[Export] public float MAX_SPEED = 100; //17;
-	[Export] public float FRICTION = 60;
-    [Export] public float GRAVITY = 60;
-    [Export] public float JUMP_VELOCITY = 15;
-    [Export] public float GROUND_ACC = 200;
+	public float MAX_SPEED = 100; //17;
+	public float FRICTION = 60;
+    public float GRAVITY = 60;
+    public float JUMP_VELOCITY = 15;
+    public float GROUND_ACC = 200;
 
     Vector3 hVelocity;
     float yVelocity;

@@ -2,7 +2,6 @@ class Weapon
 {
     readonly WeaponData data;
     int _magazine;
-    Map map;
 
     int magazine {
         get => _magazine;
@@ -18,21 +17,20 @@ class Weapon
     public bool CanReload => magazine < data.magazineCapacity;
     public bool CanFire => magazine > 0;
 
-    public Weapon(Map map, WeaponData weaponData, int startMagazine)
+    public Weapon(WeaponData weaponData, int startMagazine)
     {
-        this.map = map;
         this.data = weaponData;
         magazine = startMagazine;
     }
 
-    public Weapon(Map map, WeaponData weaponData)
-        : this(map, weaponData, weaponData.magazineCapacity)
+    public Weapon(WeaponData weaponData)
+        : this(weaponData, weaponData.magazineCapacity)
     {
     }
 
-    public WeaponInstance CreateWeaponInstance(Map map, Node3D modelRoot)
+    public WeaponInstance CreateWeaponInstance(PhysicsDirectSpaceState3D ss, Node3D modelRoot)
     {
-        WeaponInstance instance = new(this, data, modelRoot, map);
+        WeaponInstance instance = new(this, data, modelRoot, ss);
         instance.OnFire += OnInstanceFire;
         instance.OnReloadEnd += OnInstanceReloadEnd;
         return instance;

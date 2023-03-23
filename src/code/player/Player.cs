@@ -14,43 +14,40 @@ partial class Player : CharacterBody3D
 	PlayerMovement pm;
 	PlayerWeaponManager weaponManager;
 
+	PmNodeVars pmNodeVars;
 	Camera3D camera;
-	Map map;
 	Gui gui;
 	#nullable restore
 
+	void InitializeNodes() {
+		pmNodeVars = GetNode<PmNodeVars>("PmNodeVars");
+		camera = GetNode<Camera3D>("Camera3D");
+		gui = GetNode<Gui>("/root/Root/Gui");
+	}
+
 	public override void _Ready()
 	{
-		spawnPos = GlobalPosition;
 		base.FloorStopOnSlope = true;
 		base.FloorSnapLength = 1.0f;
 		base.WallMinSlideAngle = 0;
+		spawnPos = GlobalPosition;
 
-		pm = GetNode<PlayerMovement>("PlayerMovement");
-		camera = GetNode<Camera3D>("Camera3D");
-		map = GetNode<Map>("/root/Root/Map");
-		gui = GetNode<Gui>("/root/Root/Gui");
+		InitializeNodes();
 
-		WeaponData startWeaponData = new() { 
-			ammoType = AmmoType.Pistol,
-			fireType = FireType.Pistol,
-			damage = 10,
-			magazineCapacity = 5,
-			modelUID = "uid://siry2qbvuvw4",
-			reloadTime = 3f,
-			//Useless for now
-			fireRate = 0.5f,
-			soundFire = "fire_snd",
-			soundReload = "reload_snd",
-		};
-
+		Weapon startWeapon = WeaponBuilder.Create("pistol", 5);
 		var modelRoot = camera.GetNode<Node3D>("WeaponModelRoot");
-		Weapon startWeapon = new(map, startWeaponData);
-		weaponManager = new(map, gui, camera, modelRoot, new[] { startWeapon });
+		weaponManager = new(GetWorld3D().DirectSpaceState, gui, camera, modelRoot, new[] { startWeapon });
+		pm = new();
 	}
 
 	public override void _Process(double dt)
 	{
+		pm.FRICTION 		= pmNodeVars.FRICTION;
+		pm.GRAVITY 			= pmNodeVars.GRAVITY;
+		pm.GROUND_ACC		= pmNodeVars.GROUND_ACC;
+		pm.JUMP_VELOCITY	= pmNodeVars.JUMP_VELOCITY;
+		pm.MAX_SPEED		= pmNodeVars.MAX_SPEED;
+
 		if(Input.IsActionJustPressed("ui_cancel"))
 		{
 			Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured 

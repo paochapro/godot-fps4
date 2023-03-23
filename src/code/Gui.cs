@@ -1,6 +1,8 @@
 public partial class Gui : Control
 {
+	#nullable disable
 	VBoxContainer varsContainer;
+	#nullable restore
 
 	public override void _Ready()
 	{
