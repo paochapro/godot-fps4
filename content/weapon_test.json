@@ -10,5 +10,29 @@
 		"damage": 10,
 		"ammoType": "Pistol",
 		"fireType": "Pistol"
+	},
+	"shotgun":
+	{
+		"modelUID": "uid://do8mraykelpxh",
+		"soundFire": "fire_snd",
+		"soundReload": "reload_snd",
+		"reloadTime": 1,
+		"magazineCapacity": 6,
+		"fireRate": 0.5,
+		"damage": 5,
+		"ammoType": "Shotgun",
+		"fireType": "Shotgun"
+	},
+	"debug_shotgun":
+	{
+		"modelUID": "uid://do8mraykelpxh",
+		"soundFire": "fire_snd",
+		"soundReload": "reload_snd",
+		"reloadTime": 0.2,
+		"magazineCapacity": 999,
+		"fireRate": 0.5,
+		"damage": 5,
+		"ammoType": "Shotgun",
+		"fireType": "Shotgun"
 	}
 }

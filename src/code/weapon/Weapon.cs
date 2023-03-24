@@ -28,12 +28,19 @@ class Weapon
     {
     }
 
-    public WeaponInstance CreateWeaponInstance(PhysicsDirectSpaceState3D ss, Node3D modelRoot)
+    public WeaponInstance CreateWeaponInstance(PhysicsDirectSpaceState3D ss, Node3D model)
     {
-        WeaponInstance instance = new(this, data, modelRoot, ss);
+        WeaponInstance instance = new(this, data, model, ss);
         instance.OnFire += OnInstanceFire;
         instance.OnReloadEnd += OnInstanceReloadEnd;
         return instance;
+    }
+
+    public Node3D CreateModel()
+    {
+        var modelScene = GD.Load<PackedScene>(data.modelUID);
+		var model = modelScene.Instantiate<Node3D>();
+        return model;
     }
 
     void OnInstanceFire() => magazine--;

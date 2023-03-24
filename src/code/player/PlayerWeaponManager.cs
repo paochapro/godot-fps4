@@ -6,18 +6,29 @@ class PlayerWeaponManager
     List<Weapon> weapons;
 	Dictionary<AmmoType, int> ammo;
 
+    readonly StringName[] equipSlotActions;
+    readonly Dictionary<FireType, string> fireTypeWeapons;
+
     WeaponInstance? _equipedInstance;
     Node3D instanceRoot;
     Node3D modelRoot;
+    PhysicsDirectSpaceState3D spaceState;
     Gui gui;
 
     WeaponInstance? equipedInstance {
         get => _equipedInstance;
         set {
-            instanceRoot.AddChild(value);
-            _equipedInstance = value;
+            if(_equipedInstance != null) {
+                modelRoot.RemoveChild(_equipedInstance.Model);
+                instanceRoot.RemoveChild(_equipedInstance);
+                _equipedInstance.Model.QueueFree();
+                _equipedInstance.QueueFree();
+            }
             
-            if(value != null) {
+            if(value != null)  {
+                instanceRoot.AddChild(value);
+                modelRoot.AddChild(value.Model);
+
                 AmmoType ammoType = value.Weapon.WeaponData.ammoType;
                 
                 var takeOutAmmo = (int takenAmmo) => {
@@ -26,6 +37,8 @@ class PlayerWeaponManager
                 
                 value.OnReloadEnd += takeOutAmmo;
             }
+
+            _equipedInstance = value;
         }
     }
 
@@ -38,12 +51,26 @@ class PlayerWeaponManager
         this.instanceRoot = instanceRoot;
         this.modelRoot = modelRoot;
         this.gui = gui;
+        this.spaceState = ss;
         weapons = new(startWeapons);
 
-        equipedInstance = startWeapons.FirstOrDefault()?.CreateWeaponInstance(ss, modelRoot);
+        equipSlotActions = InputMap.GetActions().Where(s => s.ToString().StartsWith("weapon_equip_slot_")).ToArray();
+
+        fireTypeWeapons = new() {
+            [FireType.Pistol] = "pistol",
+            [FireType.Rifle] = "rifle",
+            [FireType.Shotgun] = "shotgun"
+        };
 
         var types = Enum.GetValues<AmmoType>();
         ammo = new(types.Select(t => new KeyValuePair<AmmoType,int>(t, 10)));
+
+        Weapon? firstWp = weapons.FirstOrDefault();
+        
+        if(firstWp != null)
+        {
+            equipedInstance = firstWp.CreateWeaponInstance(ss, firstWp.CreateModel());
+        }
     }
 
     //Constructor without start weapons
@@ -55,11 +82,35 @@ class PlayerWeaponManager
     public void Process(double dt)
     {
         if(equipedInstance == null) return;
-        Controls(equipedInstance);
+        EquipWeaponsControls();
+        InstanceControls(equipedInstance);
         GuiUpdate(equipedInstance);
     }
 
-    void Controls(WeaponInstance instance)
+    void EquipWeaponsControls()
+    {
+        foreach(string action in equipSlotActions)
+        {
+            string weaponName = action.Split('_').Last();
+
+            if(Input.IsActionJustPressed(action))
+            {
+                GD.Print($"Action pressed: {action}");
+
+                Predicate<Weapon> fireTypeSearch = (Weapon w) => {
+                    string fireTypeName = fireTypeWeapons[w.WeaponData.fireType].ToLower();
+                    return fireTypeName == weaponName;
+                };
+
+                Weapon? weapon = weapons?.Find(fireTypeSearch);
+
+                if(weapon != null)
+                    equipedInstance = weapon.CreateWeaponInstance(spaceState, weapon.CreateModel());
+            }
+        }
+    }
+
+    void InstanceControls(WeaponInstance instance)
     {
 		if(Input.IsActionJustPressed("fire"))
             FireSuccess = TryFire(instance);

@@ -9,6 +9,7 @@ static class AnimationPlayerExtensions
             return;
         }
 
+        player.Stop();
         player.Play(anim);
     }
 }

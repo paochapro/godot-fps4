@@ -2,5 +2,5 @@ using System;
 
 interface FireRayReact
 {
-    public void OnFireRayHit();
+    public void OnFireRayHit(float damage);
 }

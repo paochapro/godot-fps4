@@ -3,18 +3,21 @@ partial class WeaponInstance : Node3D
 	Weapon weapon;
 	FireService fire;
 	Timer reloadTimer;
+	Node3D model;
 	AnimationPlayer modelAnims;
 
 	int magazineReloadAmount; //not very safe
 
 	bool isReloading => !reloadTimer.IsStopped();
+
 	public Weapon Weapon => weapon;
+	public Node3D Model => model;
 	public double ReloadTimeLeft => reloadTimer.TimeLeft;
 	
 	public event Action? OnFire;
 	public event Action<int>? OnReloadEnd;
 
-	public WeaponInstance(Weapon weapon, WeaponData data, Node3D modelRoot, PhysicsDirectSpaceState3D ss)
+	public WeaponInstance(Weapon weapon, WeaponData data, Node3D model, PhysicsDirectSpaceState3D ss)
 	{
 		this.weapon = weapon;
 
@@ -27,7 +30,7 @@ partial class WeaponInstance : Node3D
 				fireService = new PistolFire(dmg, ss);
 				break;
 			case FireType.Shotgun:
-				fireService = new PistolFire(dmg, ss);
+				fireService = new ShotgunFire(dmg, ss);
 				break;
 			default:
 				fireService = new PistolFire(dmg, ss);
@@ -37,11 +40,9 @@ partial class WeaponInstance : Node3D
 		this.fire = fireService;
 		AddChild(fire);
 
-		//Create model
-		var modelScene = GD.Load<PackedScene>(data.modelUID);
-		var model = modelScene.Instantiate<Node3D>();
+		//Get animations
+		this.model = model;
 		this.modelAnims = model.GetNode<AnimationPlayer>("AnimationPlayer");
-		modelRoot.AddChild(model);
 
 		//Reload timer
 		reloadTimer = new Timer();

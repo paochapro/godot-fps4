@@ -12,7 +12,7 @@ public partial class ItemCrate : RigidBody3D, FireRayReact
 	{
 	}
 
-	public void OnFireRayHit()
+	public void OnFireRayHit(float damage)
 	{
 		GD.Print("Hello!");
 		QueueFree();

@@ -34,9 +34,10 @@ partial class Player : CharacterBody3D
 
 		InitializeNodes();
 
-		Weapon startWeapon = WeaponBuilder.Create("pistol", 5);
+		Weapon debugShotgun = WeaponBuilder.Create("debug_shotgun", 999);
+		Weapon pistol = WeaponBuilder.Create("pistol", 10);
 		var modelRoot = camera.GetNode<Node3D>("WeaponModelRoot");
-		weaponManager = new(GetWorld3D().DirectSpaceState, gui, camera, modelRoot, new[] { startWeapon });
+		weaponManager = new(GetWorld3D().DirectSpaceState, gui, camera, modelRoot, new[] { debugShotgun, pistol });
 		pm = new();
 	}
 
